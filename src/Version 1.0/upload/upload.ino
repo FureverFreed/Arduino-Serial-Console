@@ -11,6 +11,7 @@ ON=System is running fine and is responding to keystrokes.
 
 */
 int ledPin=13;
+String note="";
 void setup() {
   // put your setup code here, to run once:
   // initialize pins here:
@@ -234,6 +235,8 @@ void loop() {
         Serial.println("  help - Shows this help menu.");
         Serial.println("  exit - Freezes the Arduino.");
         Serial.println("  setpin - Sets a pin to a specified state.");
+        Serial.println("  takenote - Saves a short length note to the Arduino's chip.");
+        Serial.println("  getnote - Retrieves a saved note from the Arduino's chip.");
       }
       if(input=="setpin\n"){
         Serial.print("Type output pin: ");
@@ -243,10 +246,22 @@ void loop() {
         }
         String pin = Serial.readString();
         digitalWrite(ledPin, LOW);
-        Serial.println("You can set a pin to off to use it as a ground,");
+        Serial.println("You can set a pin to off to use it as ground,");
         Serial.println("but this is not recommended. Use at your own risk.");
         // find out type of pin and take action.
         setPin(pin);
+      }
+      if(input=="takenote\n"){
+        Serial.println("Type note:");
+        while(not Serial.available()){
+          // do nothing.
+        }
+        note = Serial.readString();
+        Serial.println("Note saved sucessfully.");
+      }
+      if(input=="getnote\n"){
+        Serial.println("Here's your note:");
+        Serial.println(note);
       }
       Serial.print(">>> ");
     }
