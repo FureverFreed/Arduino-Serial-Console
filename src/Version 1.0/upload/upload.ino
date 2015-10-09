@@ -13,13 +13,13 @@ ON=System is running fine and is responding to keystrokes.
 int ledPin=13;
 String note="";
 void setup() {
-  // put your setup code here, to run once:
   // initialize pins here:
   pinMode(ledPin, OUTPUT);
-  // add pins being used to this array:
-  int pinArray[]={13};
+  // turn off status LED.
   digitalWrite(ledPin, LOW);
+  // set baud rate here.
   Serial.begin(9600);
+  // tell user that Arduino is initializing.
   Serial.println("Initializing serial operating system, please wait...");
   // place initializing code here, such as a clock synchronization system, switch detection, etc.
   
@@ -37,6 +37,7 @@ void fatal(String error){
     delay(500);
   }
 }
+// setPin is an extremely long command. You may disregard it, or edit it if you have an Arduino with more pins.
 void setPin(String x){
   if (x=="0\n"){
     Serial.println("Invalid pin, serial communication only.");
@@ -209,7 +210,7 @@ void setPin(String x){
   }
 }
 void loop() {
-  // put your main code here, to run repeatedly:
+  // introduce user and display system specifications.
   Serial.println();
   Serial.println("Welcome to Brainstormers Club Serial Console. Here are system specifications:");
   Serial.println("System Flash Memory: 32 KB, .5 KB used by bootloader.");
@@ -220,14 +221,21 @@ void loop() {
   Serial.println("Specification list complete.");
   Serial.println("Type help for a help menu, or exit to freeze the system until reset.");
   Serial.print(">>> ");
+  // main processing loop.
   while(true){
+    // turn on status LED.
     digitalWrite(ledPin, HIGH);
+    // see if any data has been sent to the Arduino.
     if(Serial.available()){
+      // read data sent to the Arduino.
       String input = Serial.readString();
+      // turn off status LED.
       digitalWrite(ledPin, LOW);
+      // if input is exit, run fatal("System exit.")
       if(input=="exit\n"){
         fatal("System exit.");
       }
+      // if input is help, display help dialog. (Place commands you implemented in this dialog.)
       if(input=="help\n"){
         Serial.println("Console Help");
         Serial.println("This console is designed for Termite-3.2, please do not use other software.");
@@ -238,31 +246,48 @@ void loop() {
         Serial.println("  takenote - Saves a short length note to the Arduino's chip.");
         Serial.println("  getnote - Retrieves a saved note from the Arduino's chip.");
       }
+      // if input is setpin, go through the pin setting menu.
       if(input=="setpin\n"){
+        // diplay prompt to user.
         Serial.print("Type output pin: ");
+        // turn on status LED.
         digitalWrite(ledPin, HIGH);
+        // wait for input.
         while(not Serial.available()){
           // do nothing.
         }
+        // read data sent to the Arduino.
         String pin = Serial.readString();
+        // turn off status LED.
         digitalWrite(ledPin, LOW);
+        // display grounded pin instructions.
         Serial.println("You can set a pin to off to use it as ground,");
         Serial.println("but this is not recommended. Use at your own risk.");
         // find out type of pin and take action.
         setPin(pin);
       }
+      // if input is takenote, save a note from the user.
       if(input=="takenote\n"){
+        // display prompt to user.
         Serial.println("Type note:");
+        // turn on status LED.
+        digitalWrite(ledPin, HIGH);
+        // wait for input.
         while(not Serial.available()){
           // do nothing.
         }
+        // read data sent to the Arduino.
         note = Serial.readString();
+        // display sucess message.
         Serial.println("Note saved sucessfully.");
       }
+      // if input is getnote, display note to user.
       if(input=="getnote\n"){
+        // display note.
         Serial.println("Here's your note:");
         Serial.println(note);
       }
+      // display prompt to user.
       Serial.print(">>> ");
     }
   }
