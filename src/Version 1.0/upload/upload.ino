@@ -245,8 +245,15 @@ void loop() {
         Serial.println("  setpin - Sets a pin to a specified state.");
         Serial.println("  takenote - Saves a short length note to the Arduino's chip.");
         Serial.println("  getnote - Retrieves a saved note from the Arduino's chip.");
+        Serial.println("  timesincestart - Displays time since sesssion has been started.");
       }
       // if input is setpin, go through the pin setting menu.
+      if(input=="timesincestart\n"){
+        unsigned long time=millis();
+        time=time/1000;
+        Serial.println("This session has been running for "+String(time)+" seconds.");
+        digitalWrite(ledPin, HIGH);
+      }
       if(input=="setpin\n"){
         // diplay prompt to user.
         Serial.print("Type output pin: ");
